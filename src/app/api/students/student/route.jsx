@@ -17,6 +17,9 @@ export async function GET() {
         try {
             
             var id =  jwt.verify(token?.value, process.env.TOKEN_SECRET)
+            if(id?.isSuperAdmin){
+                return NextResponse.json({ error: "SuperAdmin" }, { status: 401 });
+            }
         } catch (error) {
             const response = NextResponse.json({ error: "Unauthorized" }, { status: 401 })  
             response.cookies.set('token', '', {

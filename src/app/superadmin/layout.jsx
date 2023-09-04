@@ -1,7 +1,7 @@
 "use client";
 import axios from "axios";
 import { useRouter,usePathname } from "next/navigation";
-import React, { useEffect } from "react";
+import React,{useEffect} from "react";
 import { Button, Layout, theme, Menu, Spin } from "antd";
 import { UserOutlined } from "@ant-design/icons";
 import { toast } from "react-hot-toast";
@@ -11,20 +11,22 @@ import Link from "next/link";
 const { Header, Content, Footer, Sider } = Layout;
 
 const Profilelayout = ({ children }) => {
+
   useEffect(() => {
     ( async() => {
       try {
         const res = await axios.get("http://localhost:3000/api/auth");
         console.log("🚀 ~ file: layout.jsx:16 ~ Profilelayout ~ res:", res)
-        toast(res?.data?.message)
         router.push(`/${res?.data?.route}`)
       } catch (error) {
         console.log("🚀 ~ file: layout.jsx:21 ~ auth ~ error:", error)
         toast.error(error?.response?.data?.error);
         router.push(`/${error?.response?.data?.route}`)
+        
       }})()
     
   },[])
+
   const ProfileImg = dynamic(() => import("@/component/ProfileImg"),{
     loading:()=>(
       <Spin size="medium" />
@@ -56,7 +58,7 @@ const Profilelayout = ({ children }) => {
   }));
   const items2 = ["Students"].map((text, index) => {
     return {
-      key: `/profile`,
+      key: `/superadmin/${text}`,
       icon: React.createElement(UserOutlined),
       label: text,
       onClick: (e) => {
@@ -76,16 +78,16 @@ const Profilelayout = ({ children }) => {
         style={{
           display: "flex",
           alignItems: "center",
-          justifyContent: "flex-end",
+          justifyContent: "space-between",
           // padding: 0,
         }}
       >
-        {/* <Link
-          href={"/profile"}
+        <Link
+          href={"/superadmin"}
           style={{ color: "white" }}
         >
           Home
-        </Link> */}
+        </Link>
         {/* <Menu theme="dark" mode="horizontal"  items={items1} /> */}
         <div className="demo-logo">
           <Button onClick={logout} danger>
@@ -105,23 +107,7 @@ const Profilelayout = ({ children }) => {
             background: colorBgContainer,
           }}
         >
-          <Sider
-            style={{
-              background: colorBgContainer,
-              height: "100%",
-            }}
-            width={200}
-          >
-            <Menu
-              mode="inline"
-              selectedKeys={[path]}
-              style={{
-                height: "100%",
-              }}
-              items={items2}
-            />
-            {/* <Button style={{"margin":"10px"}}> Tom </Button> */}
-          </Sider>
+          
           <Content
             style={{
               padding: "0 24px",

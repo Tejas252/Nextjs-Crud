@@ -137,9 +137,7 @@ const studentModal = ({ student, type, onUpdate, operation, disable,...rest }) =
            <Form.Item label="contact" name="contact" rules={[{ required: true, message: "Please input contact!" },{pattern:PhoneRegex,message:'Enter 10 digit number'}]}>
            <Input
              placeholder="Contact"
-             value={student?.contact}
-
-           />
+             value={student?.contact}/>
          </Form.Item>
           
         }

@@ -40,9 +40,16 @@ const LoginPage = () => {
             "http://localhost:3000/api/users/login",
             userDetails
           );
+          console.log('🚀 ~ file: page.jsx:31 ~ handleClick ~ response:', response)
+          if(response?.data.isSuperAdmin){
+            console.log("🚀 ~ file: page.jsx:43 ~ handleClick ~ response:", response?.data?.isSuperAdmin)
+            router.push("/superadmin");
+          }else{
+            router.push("/profile");
+          }
           toast.success(response.data.message);
           setUserDetails({});
-          router.push("/profile");
+          // router.push("/profile");
         } catch (error) {
           toast.error(error?.response?.data?.error);
         }

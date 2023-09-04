@@ -1,61 +1,26 @@
-// 'use client';
+'use client';
 import React from 'react'
-import axios from 'axios';
+import dynamic from 'next/dynamic';
+import { Spin } from 'antd';
 
-export async function getUserData() {
-  try {
-      const userData = await axios.get("http://localhost:3000/api/users/user")
-      return userData
 
-  } catch (error) {
-      console.log("🚀 ~ file: page.jsx:12 ~ getUserData ~ error:", error.message)
 
-      return error
-  }
-
-}
 
 const ProfilePage = async () => {
+    const Students = dynamic(() => import("@/component/studentData"), {
+        ssr: false,
+        loading: () => (
+          // <div className="d-flex justify-content-center align-items-center w-100">
+            <Spin size="medium" />
+          // </div>
+        ),
+      });
 
-  try {
-    const users = await getUserData()
     return (
         <>
-            <div className="container">
-                <div className="row">
-
-                </div>
-                <div className="row h-100">
-                    <div className="col-4"></div>
-                    <div className="col-4 d-flex justify-content-center align-items-center">
-                        <table className="table table-hover ">
-                         <thead className=" text-white">
-                                <tr>
-                                    <th>Email</th>
-                                    <th>First Name</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {users?.data?.users?.map((user) => (
-                                    <tr key={user?._id}>
-                                        <td>{user?.email}</td>
-                                        <td>{user?.userName}</td>
-                                    </tr>
-                                ))}
-                            </tbody>
-                        </table>
-                    </div>
-                    <div className="col-4"></div>
-                </div>
-            </div>
-
+        <Students/>
+            
         </>
     )
-
-} catch (error) {
-    return <>
-        {error.toString()}
-    </>
-}
 }
 export default ProfilePage

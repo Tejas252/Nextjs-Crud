@@ -4,14 +4,16 @@ import dynamic from "next/dynamic";
 import Link from "next/link";
 import React, { useEffect, useState } from "react";
 import { toast } from "react-hot-toast";
+import { useRouter } from "next/navigation";
 
 const { Column } = Table;
 
-const dataSource = async () => {
+const dataSource = async (router) => {
   try {
     const students = await axios.get(
       "http://localhost:3000/api/students/student"
     );
+    console.log("🚀 ~ file: studentData.jsx:15 ~ dataSource ~ students:", students)
     var dataStudent = [];
     students?.data?.students?.map((item) => {
       dataStudent.push({
@@ -25,8 +27,16 @@ const dataSource = async () => {
   } catch (error) {
     console.log(
       "🚀 ~ file: studentData.jsx:28 ~ dataSource ~ error:",
-      error.message
+      error?.response?.data?.error
     );
+    if(error?.response?.data?.error === "Unauthorized"){
+      toast.error(error?.response?.data?.error);
+      router.push("/login");
+    }
+    if(error?.response?.data?.error === "SuperAdmin"){
+      toast(error?.response?.data?.error);
+      router.push("/superadmin");
+    }
   }
   return dataStudent;
 };
@@ -50,12 +60,13 @@ const StudentModal = dynamic(() => import("./studentModal"), {
 // });
 
 const studentData = async () => {
+  const router = useRouter();
   const [tableData, setTableData] = useState();
 
   // Effect When render
   useEffect(() => {
     (async () => {
-      const data = await dataSource();
+      const data = await dataSource(router);
       setTableData(data);
     })();
   }, [dataSource, setTableData]);
